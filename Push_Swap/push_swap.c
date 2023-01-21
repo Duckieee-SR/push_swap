@@ -30,26 +30,45 @@ int	ft_atoi(const char *str)
 
 void rotate_a(t_stack *stk)
 {
-        int j = 0;
-        int temp;
+    int j;
+    int temp;
 
-        temp = stk->stack_a[0];
+    j = 0;
+    temp = stk->stack_a[0];
+    while (j < stk->s_a - 1)
+    {
+        stk->stack_a[j] = stk->stack_a[j + 1];
+        j++;
+    }
+    stk->stack_a[j] = temp;
+}
+
+void revrotate_a(t_stack *stk)
+{
+    int j;
+	int temp;
+
+	j = 0;
+	temp = stk->stack_a[stk->s_a - 1];
         while (j < stk->s_a - 1)
         {
-                stk->stack_a[j] = stk->stack_a[j + 1];
                 j++;
         }
-        //printf("%d\n", stk->stack_a[j]);
-        stk->stack_a[j] = temp;
+        while (j > 0)
+        {
+                stk->stack_a[j] = stk->stack_a[j - 1]; 
+                j--;
+        }
+        stk->stack_a[0] = temp;
 }
 
 void swap_a(t_stack *stk)
 {
-        int temp;
+    int temp;
 
-        temp = stk->stack_a[0];
-        stk->stack_a[0] = stk->stack_a[1];
-        stk->stack_a[1] = temp;
+    temp = stk->stack_a[0];
+    stk->stack_a[0] = stk->stack_a[1];
+    stk->stack_a[1] = temp;
 }
 
 void twoint(t_stack *stk)
@@ -59,6 +78,11 @@ void twoint(t_stack *stk)
         else if(stk->stack_a[0] < stk->stack_a[1])
                 return;
         return;
+}
+
+void fiveint(t_stack *stk)
+{
+        
 }
 
 void threeint(t_stack *stk)
@@ -74,8 +98,7 @@ void threeint(t_stack *stk)
                         rotate_a(stk);
         }
         else if(stk->stack_a[0] < stk->stack_a[1] && stk->stack_a[0] > stk->stack_a[2])
-                return;
-                //revrotate(a);
+                revrotate_a(stk);
         else if(stk->stack_a[0] > stk->stack_a[1] && stk->stack_a[0] < stk->stack_a[2])
                 swap_a(stk);
         else if(stk->stack_a[0] < stk->stack_a[1] && stk->stack_a[0] < stk->stack_a[2])
