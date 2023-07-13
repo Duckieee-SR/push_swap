@@ -1,154 +1,103 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   push_swap.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gamaro-l <gamaro-l@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/14 16:11:34 by gamaro-l          #+#    #+#             */
+/*   Updated: 2023/07/11 22:48:30 by gamaro-l         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "push_swap.h"
 
-int	ft_atoi(const char *str)
+void	main_extras(int argc, char **argv, int temp, t_stack *stk)
 {
-	unsigned int	w;
-	unsigned int	mc;
-	unsigned int	res;
+	int	j;
+	int	i;
 
-	w = 0;
-	mc = 1;
-	res = 0;
-	while (str[w] == '\t' || str[w] == '\n' || str[w] == '\v' || str[w] == '\f'
-		|| str[w] == '\r' || str[w] == ' ')
-		w++;
-	if (str[w] == '-')
+	i = 0;
+	while (i < argc - 1)
 	{
-		mc *= -1;
-		w++;
+		temp = ft_atoi(argv[i + 1]);
+		stk->stack_a[i] = ft_atoi(argv[i + 1]);
+		j = 0;
+		while (j < i)
+		{
+			if (temp == stk->stack_a[j])
+			{
+				printf("Error\n");
+				free(stk->stack_a);
+				exit(-1);
+			}
+			j++;
+		}
+		i++;
 	}
-	else if (str[w] == '+')
-		w++;
-	while (str[w] >= '0' && str[w] <= '9')
+}
+
+void	main_hardcode(t_stack stk)
+{
+	if (stk.s_a == 2)
+		twoint_a(&stk);
+	else if (stk.s_a == 3)
+		threeint_a(&stk);
+	else if (stk.s_a == 4)
+		fourint_main(&stk);
+	else if (stk.s_a == 5)
+		fiveint_main(&stk);
+}
+
+void	main_algorithm(t_stack *stk)
+{
+	int i;
+
+	i = -1;
+	while (stk->stack_a[i] < stk->stack_a[i + 1])
 	{
-		res = (res * 10) + (str[w] - '0');
-		w++;
+		i++;
 	}
-	return (res * mc);
+	if (i == stk->s_a)
+	{
+		no_argument(stk);
+	}
+	else if (i != stk->s_a)
+	{
+		send_chunks(stk, divide_chunks(getreadyfordivide(*stk), stk->s_a));
+		threeint_a(stk);
+		while (stk->s_b)
+		{
+			send_back_from_b(stk);
+		}
+		rotate_until_sorted(stk);
+	}
 }
 
-void rotate_a(t_stack *stk)
+int	main(int argc, char **argv)
 {
-    int j;
-    int temp;
+	t_stack	stk;
+	int		temp;
 
-    j = 0;
-    temp = stk->stack_a[0];
-    while (j < stk->s_a - 1)
-    {
-        stk->stack_a[j] = stk->stack_a[j + 1];
-        j++;
-    }
-    stk->stack_a[j] = temp;
-}
-
-void revrotate_a(t_stack *stk)
-{
-    int j;
-	int temp;
-
-	j = 0;
-	temp = stk->stack_a[stk->s_a - 1];
-        while (j < stk->s_a - 1)
-        {
-                j++;
-        }
-        while (j > 0)
-        {
-                stk->stack_a[j] = stk->stack_a[j - 1]; 
-                j--;
-        }
-        stk->stack_a[0] = temp;
-}
-
-void swap_a(t_stack *stk)
-{
-    int temp;
-
-    temp = stk->stack_a[0];
-    stk->stack_a[0] = stk->stack_a[1];
-    stk->stack_a[1] = temp;
-}
-
-void twoint(t_stack *stk)
-{
-        if(stk->stack_a[0] > stk->stack_a[1])
-                swap_a(stk);
-        else if(stk->stack_a[0] < stk->stack_a[1])
-                return;
-        return;
-}
-
-void fiveint(t_stack *stk)
-{
-        
-}
-
-void threeint(t_stack *stk)
-{
-        if(stk->stack_a[0] > stk->stack_a[1] && stk->stack_a[0] > stk->stack_a[2])
-        {
-                if(stk->stack_a[1] > stk->stack_a[2])
-                {
-                        rotate_a(stk);
-                        swap_a(stk);
-                }
-                else if(stk->stack_a[1] < stk->stack_a[2])
-                        rotate_a(stk);
-        }
-        else if(stk->stack_a[0] < stk->stack_a[1] && stk->stack_a[0] > stk->stack_a[2])
-                revrotate_a(stk);
-        else if(stk->stack_a[0] > stk->stack_a[1] && stk->stack_a[0] < stk->stack_a[2])
-                swap_a(stk);
-        else if(stk->stack_a[0] < stk->stack_a[1] && stk->stack_a[0] < stk->stack_a[2])
-        {
-                swap_a(stk);
-                rotate_a(stk);
-        }
-        else if (stk->stack_a[0] < stk->stack_a[1] && stk->stack_a[0] < stk->stack_a[2])
-                return;
-}
-
-
-int main(int argc, char **argv)
-{
-        t_stack stk;
-        int temp;
-        int a[argc - 1];
-        int i;
-        int j;
-
-        i = 0;
-        j = 0;
-        stk.s_a = (argc - 1);
-        stk.s_b = 0;
-        stk.stack_a = malloc(sizeof(int) * stk.s_a);
-        while (i < argc - 1)
-        {
-                temp = ft_atoi(argv[i + 1]);
-                stk.stack_a[i] = ft_atoi(argv[i + 1]);
-                while(j < i)
-                {
-                        if (temp == stk.stack_a[j])
-                        {
-                                printf("Error\n");
-                                free(stk.stack_a);
-                                return (0);
-                        }
-                        j++;
-                }
-                i++;
-        }
-        if (stk.s_a == 2)
-                twoint(&stk);
-        else if (stk.s_a == 3)
-                threeint(&stk);
-        i = 0;
-        while (i < stk.s_a)
-        {
-                printf("%d\n", stk.stack_a[i]);
-                i++;
-        }
-        free(stk.stack_a);
+	temp = 0;
+	stk.s_a = (argc - 1);
+	stk.s_b = 0;
+	stk.stack_a = malloc(sizeof(int) * stk.s_a);
+	stk.stack_b = NULL;
+	if (!stk.stack_a)
+	{
+		write(1, "Lack of Memory\n", 16);
+		exit(-1);
+	}
+	main_extras(argc, argv, temp, &stk);
+	if (stk.s_a > 1 && stk.s_a < 6)
+		main_hardcode(stk);
+	else if (stk.s_a > 5)
+		main_algorithm(&stk);
+	else if(stk.s_a == 0)
+		no_argument(&stk);
+	else
+		error(&stk);
+	free(stk.stack_a);
+	free(stk.stack_b);
 }
